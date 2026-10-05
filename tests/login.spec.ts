@@ -1,34 +1,40 @@
 import { test, expect } from '@playwright/test';
-import { loginData } from './test-data';
-import { LoginPage } from './LoginPage';
+import { LoginPage } from '../pages/LoginPage';
 
-test('Login berhasil dengan username dan password valid', async ({ page }) => {
+test.describe('Login Test Suite', () => {
 
-  const loginPage = new LoginPage(page);
+  test('TC-LOGIN-001 - Login dengan credential valid', async ({ page }) => {
 
-  await loginPage.goto();
+    const loginPage = new LoginPage(page);
 
-  await loginPage.login(
-    loginData.validUser.validUser,
-    loginData.validUser.validPassword
-  );
-  
-  await expect(page).toHaveURL(/inventory/);
+    await loginPage.open();
 
-});
+    await loginPage.login(
+      'standard_user',
+      'secret_sauce'
+    );
 
-
-test('Login gagal dengan username dan password tidak valid', async ({ page }) => {
+    await expect(page).toHaveURL(/inventory/);
+    await expect(page.locator('.title')).toHaveText('Products');
+  });
 
 
-const loginPage = new LoginPage(page);
+  test('TC-LOGIN-002 - Login dengan password salah', async ({ page }) => {
 
-  await loginPage.goto();
+    const loginPage = new LoginPage(page);
 
-  await loginPage.login(
-    loginData.invalidUser.invalidUser,
-    loginData.invalidUser.invalidPassword
-  );
+    await loginPage.open();
 
-   await expect(loginPage.errorMessage).toBeVisible();
+    await loginPage.login(
+      'standard_user',
+      'password_salah'
+    );
+
+    await expect(loginPage.errorMessage).toBeVisible();
+
+    await expect(loginPage.errorMessage).toContainText(
+      'Username and password do not match'
+    );
+  });
+
 });
