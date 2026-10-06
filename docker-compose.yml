@@ -1,0 +1,7 @@
+services:
+  playwright:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: playwright-qa
+    container_name: playwright-qa
