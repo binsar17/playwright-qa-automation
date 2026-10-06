@@ -5,7 +5,11 @@ export default defineConfig({
 
   fullyParallel: true,
 
-  reporter: 'html',
+  reporter: [
+    ['html'],
+    ['allure-playwright'],
+  
+  ],
 
   use: {
     screenshot: 'on',
